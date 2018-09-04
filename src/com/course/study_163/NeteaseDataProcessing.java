@@ -15,6 +15,13 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
 
+/**
+ * 类：NeteaseDataProcessing
+ * 作用：对存储在NeteaseData.txt文件中的Json数据进行解析；同时将解析的结果存储在NeteaseJsonData.txt文件当中。
+ * 原理：使用JSONObject对json数据进行两层解析；第1层为result，第二层为list；再将list中的数据传入到jsonArray数组当中；最后解析数组中的数据，并存储到NeteaseJsonData.txt文件中。
+ * 字段结果：产品名称、提供商、评分、学习者数量、课程价格
+ */
+
 public class NeteaseDataProcessing implements Runnable {
 
     private File file = null;

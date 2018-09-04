@@ -6,6 +6,11 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.BufferedWriter;
 
+/**
+ * 类：NeteaseDataStorage
+ * 作用：存储数据；对传入方法getNeteaseDataStorage(String strDoc) 的strDoc参数(或字符串)会存储到NeteaseData.txt文件当中。
+ */
+
 public final class NeteaseDataStorage {
 
     private static File file = null;
@@ -20,6 +25,7 @@ public final class NeteaseDataStorage {
             outputStream = new FileOutputStream(file, true);
             outputStreamWriter = new OutputStreamWriter(outputStream);
             bufferedWriter = new BufferedWriter(outputStreamWriter);
+            // 将参数strDoc存储到NeteaseData.txt文件中。
             bufferedWriter.write(strDoc + "\r\n");
             bufferedWriter.close();
             outputStreamWriter.close();

@@ -1,5 +1,15 @@
 package com.course.study_163;
 
+/**
+ * 类：NeteaseDataFile
+ * 作用：完成计算用于获取课程数据的json参数。
+ * 原理：
+ * 1、将json格式的请求参数划分为三段。分别体现在Stra、Strb、Strc。
+ * 2、通过for循环完成计算请求参数中的pageIndex和relativeOffset的正确值。
+ * 3、使用 NeteaseJsoup.getNeteaseRun()进行数据获取，同时使用NeteaseDataStorage.getNeteaseDataStorage()对获取的json数据进行存储。
+ *
+ */
+
 public class NeteaseDataFile implements Runnable {
 
     private String Stra = "{\"pageIndex\":";
@@ -19,7 +29,6 @@ public class NeteaseDataFile implements Runnable {
                         NeteaseJsoup.getNeteaseRun(Stra + j + Strb + i + Strc)
                 );
             }
-
 
         } catch (Exception e) {
 

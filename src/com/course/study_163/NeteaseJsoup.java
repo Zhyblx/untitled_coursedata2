@@ -4,6 +4,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 
+/**
+ * 类：NeteaseJsoup
+ * 作用：
+ * 1、基于Jsoup获取到网易云课堂的课程数据。
+ * 2、将获取到的json数据以String类型返回。
+ */
+
 public final class NeteaseJsoup {
 
     private static final String URL="https://study.163.com/p/search/studycourse.json";
