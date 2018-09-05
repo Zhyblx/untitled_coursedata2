@@ -2,7 +2,7 @@
 
 ----
 ## 一、项目背景
-1）获取网易云课堂、腾讯课堂、荔枝微课、千聊以上4个网站的课程信息。<br>
+1）获取网易云课堂、腾讯课堂、荔枝微课以上3个网站的课程信息。<br>
 2）需获取课程字段包括： 课程名称、课程作者、课程评分、学习人数、课程价格。<br>
 3）数据的输出格式为：Excel
 
@@ -105,3 +105,111 @@
 
 </table>
 
+
+**B.腾讯课堂：**
+1）腾讯课堂的数据获取Job在目录study_qq文件夹中。<br>
+2）分析网站规则：<br>
+
+    a.直接通过Jsoup Elements类对页面进行解析，得到课程名称、课程作者、学习人数以及价格的字段信息。示例代码:<br>
+        public static String getQQRun(String URL){
+            int i=0;
+            String price="";
+            String data="";
+            String num="";
+            try{
+    
+                connection=Jsoup.connect(URL);
+                connection.userAgent(USERAGENT);
+                connection.ignoreContentType(true);
+                connection.timeout(10000);
+                connection.header("content-type","text/html; charset=utf-8");
+                connection.header("accept-encoding","gzip, deflate, br");
+                connection.header("accept-language","zh-CN,zh;q=0.9");
+                connection.header("content-encoding","gzip");
+                connection.header("server","openresty");
+                connection.header("accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+                document=connection.get();
+    //            System.out.println(document.html());
+                elements=document.select("[class=course-card-list]");
+                elements1=elements.select("[class=course-card-item]");
+                while (i<elements1.size()){
+                    if(i==24){
+                        break;
+                    }
+    //                System.out.println(elements1.get(i).html());
+                    elements2=elements1.get(i).select("[class=item-tt]");
+                    elements3=elements2.select("[class=item-tt-link]");
+                    //System.out.println(elements3.html());//课程名称
+    
+    
+                    elements4=elements1.get(i).select("[class=item-line item-line--middle]");
+                    elements5=elements4.select("[class=item-source-link]");
+                    //System.out.println(elements5.html());//课程作者
+    
+    
+                    elements6=elements4.select("[class=line-cell item-user]");
+                    //System.out.println(elements6.html());//学习人数
+                    String regex = "\\d*";
+                    Pattern p = Pattern.compile(regex);
+                    Matcher m = p.matcher(elements6.html());
+                    while (m.find()) {
+                        if (!"".equals(m.group())){
+                            //System.out.println(m.group());//学习人数
+                            num=m.group();
+    
+                        }
+                    }
+    
+    
+                    elements7=elements1.get(i).select("[class=item-line item-line--bottom]");
+                    elements8=elements7.select("[class=line-cell item-price free]");
+                    //System.out.println(elements8.html());//课程价格(免费)
+                    elements9=elements7.select("[class=line-cell item-price]");
+                    //System.out.println(elements9.html());//课程价格(费用)
+                    price=elements8.html()+elements9.html();
+    
+                    data=data+elements3.html()+"|"+elements5.html()+"|"+"null"+"|"+num+"|"+price+"\r\n";
+    
+                    i++;
+    
+                }
+                System.out.println(data);
+    
+            }catch(Exception e){
+                // 异常不处理
+            }
+    
+            return data;
+        }
+
+
+    b.获取到的数据通过QQDataStorage类进行存储;存放地址为根目录下QQData.txt文件中。<br>
+    c.通过QQDataFile类循环遍历腾讯课堂的课程信息。示例代码：
+                for (int i = 1; i < 35; i++) {
+                    Thread.sleep(10000);
+                    QQDataStorage.getQQDataStorage(QQJsoup.getQQRun("https://ke.qq.com/course/list?mt=1002&task_filter=0000000&&page=" + i));
+                }
+
+    备注：腾讯课堂的课程信息没有提供课程评分数据。
+
+
+3）数据格式：<br>
+  
+  <table>
+  <tr>
+  <td>课程名称</td>
+  <td>课程作者</td>
+  <td>课程评分</td>
+  <td>学习人数</td>
+  <td>课程价格</td>
+  </tr>
+  
+  <tr>
+  <td>UG基础到产品设计</td>
+  <td>东湖教育</td>
+  <td>null</td>
+  <td>461</td>
+  <td>0</td>
+  </tr>
+  
+  </table>
